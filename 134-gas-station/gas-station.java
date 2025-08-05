@@ -4,7 +4,7 @@ class Solution {
         int startStation=0;
         int currentGas=0;
         for(int i=0;i<gas.length;i++){
-            int netGas=gas[i]+cost[i];
+            // int netGas=gas[i]+cost[i];
             totalGas+=gas[i]-cost[i];
             currentGas+=gas[i]-cost[i];
             if(currentGas<0){
