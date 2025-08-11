@@ -1,28 +1,30 @@
 class Solution {
-
-    private static final int MOD = 1000000007;
-
     public int[] productQueries(int n, int[][] queries) {
-        List<Integer> bins = new ArrayList<>();
-        int rep = 1;
+        int power = 1, MOD = (int) 1e9 + 7;
+        while (power <= n) power <<= 1;
+        power >>= 1;
+
+        List<Integer> powers = new ArrayList<>();
         while (n > 0) {
-            if (n % 2 == 1) {
-                bins.add(rep);
+            if (power <= n) {
+                powers.add(power);
+                n -= power;
             }
-            n /= 2;
-            rep *= 2;
+            power >>= 1;
         }
 
-        int[] ans = new int[queries.length];
-        for (int i = 0; i < queries.length; i++) {
-            long cur = 1;
-            int start = queries[i][0];
-            int end = queries[i][1];
-            for (int j = start; j <= end; j++) {
-                cur = (cur * bins.get(j)) % MOD;
-            }
-            ans[i] = (int) cur;
+        n = powers.size();
+        int[][] prefix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            prefix[i][i] = powers.get(n - 1 - i);
+            for (int j = i + 1; j < n; j++)
+                prefix[i][j] = (int)((1L * prefix[i][j - 1] * powers.get(n - 1 - j)) % MOD);
         }
-        return ans;
+
+        int[] res = new int[queries.length];
+        for (int i = 0; i < queries.length; i++)
+            res[i] = prefix[queries[i][0]][queries[i][1]];
+
+        return res;
     }
 }
